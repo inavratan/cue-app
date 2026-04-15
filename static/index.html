@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Cue — AI-powered stadium companion for Indian sporting venues. Real-time crowd intelligence, Gemini AI concierge, and smart exit planning.">
+  <meta name="theme-color" content="#FFFFFF">
+  <link rel="manifest" href="manifest.json">
+  <title>Cue — AI Stadium Companion</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏟️</text></svg>">
+  
+  <!-- Fonts: DM Sans and Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+  
+  <!-- Google Maps JS API (Places) -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=GOOGLE_MAPS_API_KEY&libraries=places"></script>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-R5GHRCEJ9Z"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-R5GHRCEJ9Z');
+  </script>
+</head>
+<body>
+  <!-- Skip to Content (Accessibility) -->
+  <a href="#main-content" class="skip-link" aria-label="Skip to main content">Skip to content</a>
+
+  <div class="app-container">
+    
+    <!-- Smart Toast Notification -->
+    <div id="smartToast" class="smart-toast" style="display: none;" role="alert" aria-live="assertive">
+      <span id="smartToastText"></span>
+    </div>
+
+    <!-- Floating Demo Toggle -->
+    <button id="demoToggleBtn" class="floating-demo-btn" aria-label="Cycle through demo event phases">Phase: Match</button>
+    
+    <!-- Header -->
+    <header class="header">
+      <div class="header-logo"><span class="logo-text">Cue</span></div>
+      
+      <select id="venueSelect" class="venue-dropdown" aria-label="Select venue">
+        <option value="wankhede">Wankhede Stadium</option>
+        <option value="narendra_modi">NM Stadium</option>
+        <option value="salt_lake">Salt Lake</option>
+      </select>
+      
+      <div class="header-right">
+        <button id="langToggleBtn" class="lang-toggle" aria-label="Toggle English/Hindi">EN</button>
+        <button id="sosHeaderBtn" class="sos-pill" aria-label="Emergency SOS">SOS</button>
+        <button id="a11yToggle" class="a11y-toggle" aria-label="Toggle accessibility mode">
+          Aa
+        </button>
+      </div>
+    </header>
+
+    <!-- Stadium Hero Image -->
+    <div class="stadium-hero">
+      <img id="stadiumHeroImage" src="https://res.cloudinary.com/djsncsftd/image/upload/v1776222434/wankhede_3d_skhkmc.png" alt="Wankhede Stadium 3D View" loading="eager">
+    </div>
+
+    <!-- Match Context Bar -->
+    <div class="card match-context">
+      <div class="match-header">
+        <div>
+          <div id="matchName" class="text-bold text-primary mb-8" style="font-size: 18px;">MI vs CSK</div>
+          <div id="matchDetails" class="text-secondary text-medium" style="font-size: 13px;">IPL T20 · 7:30 PM</div>
+        </div>
+        <div class="d-flex align-center gap-2">
+          <button id="calendarBtn" class="icon-btn-subtle" title="Save to Calendar" aria-label="Save match to Google Calendar" style="border: 1px solid var(--md-sys-color-primary); color: var(--md-sys-color-primary); font-size: 12px; width: auto; padding: 0 10px; border-radius: 100px; height: 32px; font-weight: 600; gap: 4px;">
+            📅 Calendar
+          </button>
+          <button id="loreBtn" class="icon-btn-subtle" title="Stadium Facts" aria-label="Show stadium facts">
+            <span class="material-symbols-outlined" style="font-size: 18px;">lightbulb</span>
+          </button>
+          <button id="headerMapBtn" class="qr-nav-btn" style="background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);" aria-label="Show stadium map">
+            <span class="material-symbols-outlined">map</span>
+          </button>
+          <div id="matchCity" class="city-pill text-secondary">Mumbai</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Area: Panels -->
+    <main id="main-content" class="content-padding" role="main">
+      
+      <!-- Screen 1: Smart Entry (Active by default) -->
+      <div id="panel-entry" class="tab-panel active" role="tabpanel" aria-labelledby="tab-entry">
+        
+        <!-- Ticket Card -->
+        <div class="card ticket-card">
+          <div>
+            <div id="seatLabel" class="text-secondary text-medium mb-8" style="font-size: 12px;" data-i18n="Your Seats">Your Seats</div>
+            <div id="seatInfo" class="text-bold text-primary" style="font-size: 16px;"></div>
+          </div>
+          <div id="qrTriggerBtn" class="qr-code" style="cursor: pointer;" aria-label="Show scannable QR ticket" role="button">
+            <div class="qr-placeholder" aria-hidden="true">
+              <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+              <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+              <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+              <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+              <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+              <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
+            </div>
+            <div class="text-secondary text-medium" style="font-size: 10px;" data-i18n="Scan at gate">Scan at gate</div>
+          </div>
+        </div>
+
+        <!-- Recommended Entry Gates -->
+        <h2 class="section-title text-primary" data-i18n="Recommended Entry">Recommended Entry</h2>
+        <div id="gatesContainer" aria-live="polite">
+          <!-- Gate cards will be injected here by app.js -->
+        </div>
+
+        <!-- Timeline Strip -->
+        <h2 class="section-title text-primary" style="margin-top: 32px;" data-i18n="Event Timeline">Event Timeline</h2>
+        <div id="timelineContainer" class="timeline-container" aria-live="polite">
+          <!-- Timeline items will be injected here by app.js -->
+        </div>
+        
+      </div>
+
+      <!-- Screen 2: Live Pulse -->
+      <div id="panel-pulse" class="tab-panel" role="tabpanel" aria-labelledby="tab-pulse">
+        
+        <div class="d-flex justify-between align-center mb-8">
+          <div class="text-secondary text-medium" style="font-size: 14px;" data-i18n="Match Status">Match Status</div>
+          <div class="live-indicator">
+            <div class="pulse-dot"></div> Live
+          </div>
+        </div>
+        
+        <div class="card match-status-card">
+          <div id="pulseScore" class="match-score text-primary">MI 142/3</div>
+          <div id="pulseOvers" class="text-secondary mb-8">16.2 overs</div>
+          <div id="pulsePhaseIndicator" class="phase-pill match" role="status">
+            Match On 🏏
+          </div>
+          <div id="pulsePhaseDesc" class="text-secondary" style="font-size: 13px;">
+            Match in progress. Most fans are seated.
+          </div>
+        </div>
+
+        <h2 class="section-title text-primary" data-i18n="Crowd Density">Crowd Density</h2>
+        <div id="pulseZonesGrid" class="zone-grid mb-24" aria-live="polite">
+          <!-- Zone Cards injected here -->
+        </div>
+
+        <h2 class="section-title text-primary" data-i18n="Smart Suggestions">Smart Suggestions</h2>
+        <div class="smart-cards-container mb-24">
+          
+          <!-- Food Card -->
+          <div class="card smart-card">
+            <div class="smart-card-title">
+              <span data-i18n="Food & Drinks">Food & Drinks</span>
+              <span>🍔</span>
+            </div>
+            <div id="pulseFoodList" aria-live="polite">
+              <!-- Food items injected here -->
+            </div>
+          </div>
+
+          <!-- Restroom Card -->
+          <div class="card smart-card">
+            <div class="smart-card-title">
+              <span data-i18n="Restrooms">Restrooms</span>
+              <span>🚻</span>
+            </div>
+            <div id="pulseRestroomList" aria-live="polite">
+              <!-- Restroom items injected here -->
+            </div>
+          </div>
+
+          <!-- AI Prediction Card -->
+          <div class="card smart-card ai-card">
+            <div class="smart-card-title">
+              <span class="d-flex align-center gap-2">
+                AI Insight <span class="text-secondary ml-4" style="font-size: 11px; font-weight: 500;">Powered by Gemini</span>
+              </span>
+              <span>✨</span>
+            </div>
+            <div id="pulseAIPrediction" class="text-primary text-regular" style="font-size: 14px; line-height: 1.5;" aria-live="polite">
+              <!-- Prediction injected here -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Demo Controls -->
+        <div class="demo-controls">
+          <div class="demo-title">Simulate Event Phase</div>
+          <div class="segmented-control">
+            <button class="segment-btn" data-phase="pre-match" aria-label="Simulate pre-match phase">Pre-match</button>
+            <button class="segment-btn active" data-phase="match" aria-label="Simulate match phase">Match</button>
+            <button class="segment-btn" data-phase="break" aria-label="Simulate break phase">Break</button>
+            <button class="segment-btn" data-phase="post-match" aria-label="Simulate post-match phase">Post-match</button>
+          </div>
+        </div>
+
+      </div>
+      
+      <!-- Screen 3: AI Concierge -->
+      <div id="panel-concierge" class="tab-panel" role="tabpanel" aria-labelledby="tab-concierge">
+        <div class="chat-container">
+          <!-- Chat Header -->
+          <div class="chat-header">
+            <div class="text-medium text-primary" style="font-size: 16px;">✨ Cue Concierge</div>
+            <div class="gemini-badge">Powered by Gemini</div>
+          </div>
+
+          <!-- Chat Messages Area -->
+          <div id="chatMessages" class="chat-messages" role="log" aria-live="polite">
+            <!-- Messages injected here -->
+          </div>
+
+          <!-- Suggestion Chips -->
+          <div id="suggestionChips" class="suggestion-chips-container">
+            <div id="conciergeSosChip" class="suggestion-chip sos-chip" role="button" aria-label="Emergency">🚨 Emergency</div>
+            <div class="suggestion-chip" role="button" aria-label="Nearest food">🍔 Nearest food</div>
+            <div class="suggestion-chip" role="button" aria-label="Restrooms">🚻 Restrooms</div>
+            <div class="suggestion-chip" role="button" aria-label="Exit plan">🚪 Exit plan</div>
+            <div class="suggestion-chip" role="button" aria-label="Parking">🅿️ Parking</div>
+            <div class="suggestion-chip" role="button" aria-label="My seat location">📍 My seat location</div>
+            <div class="suggestion-chip" role="button" aria-label="Best time to move">⏱️ Best time to move</div>
+          </div>
+
+          <!-- Input Bar -->
+          <div class="chat-input-bar">
+            <div class="input-container">
+              <span id="chatInputDesc" class="sr-only">Type a question about the venue, food, exits, or emergencies</span>
+              <input type="text" id="chatInput" aria-describedby="chatInputDesc" class="chat-input-field" placeholder="Ask Cue anything about the venue..." aria-label="Message Cue concierge" autocomplete="off">
+              <button id="sendChatBtn" class="chat-send-btn" aria-label="Send message">
+                <span class="material-symbols-outlined">arrow_upward</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Screen 4: Smart Exit -->
+      <div id="panel-exit" class="tab-panel" role="tabpanel" aria-labelledby="tab-exit">
+        <div class="p-3 pb-5">
+          <!-- AI Recommendation Hero Card -->
+          <div id="exitHeroCard" class="card ai-exit-card" aria-live="polite">
+            <div class="ai-label">✨ AI Recommendation</div>
+            <h3 id="exitHeadline" class="text-large text-primary mb-1 mt-1"></h3>
+            <p id="exitDetail" class="text-medium text-secondary mb-2" style="line-height: 1.5;"></p>
+            <div id="exitWaitSaved" class="exit-saved-badge" style="display: none;"></div>
+          </div>
+
+          <!-- Transport Section -->
+          <h2 class="section-title mt-3 mb-2" style="font-size: 16px; font-family: 'DM Sans', sans-serif;" data-i18n="Getting Home">Getting Home</h2>
+          
+          <div class="destination-form mb-3" style="position: relative;">
+            <div class="input-container" style="background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: 12px; display: flex; align-items: center; padding: 0 12px;">
+              <span class="material-symbols-outlined text-secondary" style="font-size: 20px;">search</span>
+              <span id="routeInputDesc" class="sr-only">Search for your destination to get transport recommendations</span>
+              <input type="text" id="routeDestinationInput" aria-describedby="routeInputDesc" placeholder="Where do you want to go?" aria-label="Search destination" style="border: none; padding: 16px 12px; width: 100%; border-radius: 12px; font-size: 15px; outline: none; background: transparent; color: var(--md-sys-color-on-surface);">
+            </div>
+            <div id="routeAutocompleteResults" class="autocomplete-results" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: 12px; margin-top: 4px; box-shadow: var(--base-shadow); z-index: 10; max-height: 200px; overflow-y: auto;"></div>
+          </div>
+
+          <div id="transportContainer" class="d-flex flex-column gap-2 mb-3" aria-live="polite">
+            <!-- Transport cards injected here -->
+          </div>
+
+          <h2 class="section-title mt-3 mb-2" style="font-size: 16px;">Your Match Memory</h2>
+          <div class="card text-center p-3 mb-3" style="background: linear-gradient(135deg, #1A73E8 0%, #0D47A1 100%); color: white; border: none;">
+            <div style="font-size: 24px; margin-bottom: 8px;">🏆</div>
+            <h3 class="text-large mb-1" style="color: white;">Download Your Souvenir</h3>
+            <p class="text-small mb-3" style="color: rgba(255,255,255,0.8);">Get a custom digital poster of your night at the stadium.</p>
+            <button id="generatePosterBtn" class="premium-btn" aria-label="Generate and download match souvenir">Generate & Download</button>
+          </div>
+
+          <!-- Crowd Forecast Chart -->
+          <h2 class="section-title mt-3 mb-2" style="font-size: 16px; font-family: 'DM Sans', sans-serif;" data-i18n="Exit Crowd Forecast">Exit Crowd Forecast</h2>
+          <div class="card mb-3">
+            <div id="forecastChart" class="forecast-chart" aria-live="polite">
+               <!-- Bars injected here -->
+            </div>
+          </div>
+
+          <!-- Rate Your Experience -->
+          <h2 class="section-title mt-3 mb-2" style="font-size: 16px; font-family: 'DM Sans', sans-serif;" data-i18n="Rate Your Experience">Rate Your Experience</h2>
+          <div class="card text-center text-medium">
+            <div id="starContainer" class="star-rating mb-2" role="radiogroup" aria-label="Rate your experience" aria-expanded="false">
+              <span class="star" role="radio" aria-checked="false" aria-label="1 star" data-value="1">☆</span>
+              <span class="star" role="radio" aria-checked="false" aria-label="2 stars" data-value="2">☆</span>
+              <span class="star" role="radio" aria-checked="false" aria-label="3 stars" data-value="3">☆</span>
+              <span class="star" role="radio" aria-checked="false" aria-label="4 stars" data-value="4">☆</span>
+              <span class="star" role="radio" aria-checked="false" aria-label="5 stars" data-value="5">☆</span>
+            </div>
+            <div id="feedbackContainer" class="feedback-chips-container mt-2" style="display: none;">
+              <div class="feedback-chip" role="checkbox" aria-checked="false">✅ Entry was smooth</div>
+              <div class="feedback-chip" role="checkbox" aria-checked="false">🍔 Food queues too long</div>
+              <div class="feedback-chip" role="checkbox" aria-checked="false">😤 Exit was chaotic</div>
+              <div class="feedback-chip" role="checkbox" aria-checked="false">🤖 Loved the AI tips</div>
+              <div class="feedback-chip" role="checkbox" aria-checked="false">📱 App was helpful</div>
+            </div>
+            <div id="feedbackThanks" class="text-small text-secondary mt-2 mb-1" style="display: none; transition: opacity 0.3s; opacity: 0;">Thanks for your feedback! 🙏</div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+
+
+    <!-- QR Modal -->
+    <div id="qrModal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="QR Ticket Scanner" style="display: none;">
+      <div class="modal-content text-center">
+        <h3 class="text-large text-primary mb-1">Scan Ticket</h3>
+        <div id="qrPagination" class="text-medium text-secondary mb-3" style="font-size: 14px;"></div>
+        
+        <div class="d-flex align-center justify-center" style="gap: 16px;">
+          <button id="prevTicketBtn" class="qr-nav-btn" aria-label="Previous Ticket">
+            <span class="material-symbols-outlined">chevron_left</span>
+          </button>
+          
+          <div class="qr-code-large" aria-label="QR ticket code">
+            <div class="qr-placeholder-large"></div>
+          </div>
+
+          <button id="nextTicketBtn" class="qr-nav-btn" aria-label="Next Ticket">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+        </div>
+
+        <div id="qrModalSeatInfo" class="text-secondary text-medium mt-3" style="font-size: 14px;"></div>
+        <button id="closeQrBtn" class="floating-demo-btn" style="position: relative; top: auto; right: auto; left: auto; bottom: auto; margin-top: 16px; background-color: var(--md-sys-color-surface-variant); color: var(--md-sys-color-on-surface); box-shadow: none; width: 100%; border-radius: 12px; display: block;" aria-label="Close QR Modal">Close</button>
+      </div>
+    </div>
+
+    <!-- SOS Modal -->
+    <div id="sosModal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Emergency Assistance" style="display: none;">
+      <div class="modal-content" style="text-align: left; background: var(--md-sys-color-surface);">
+        <h3 class="text-large mb-3" style="font-weight: 700; font-size: 18px;">🚨 Emergency Assistance</h3>
+        <div id="sosCardsContainer" class="d-flex flex-column gap-2 mb-3">
+          <!-- SOS cards injected by JS -->
+        </div>
+        <div class="text-center mt-3 mb-2">
+          <a href="tel:+911234567890" style="color: #1a73e8; font-weight: 500; text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 4px;">
+            <span class="material-symbols-outlined" style="font-size: 16px;">call</span> Call venue helpline
+          </a>
+        </div>
+        <button id="closeSosBtn" class="floating-demo-btn full-width" style="position: relative; top: auto; right: auto; left: auto; bottom: auto; margin-top: 16px; background-color: var(--md-sys-color-surface-variant); color: var(--md-sys-color-on-surface); box-shadow: none; width: 100%; border-radius: 12px;" aria-label="Close SOS Modal">Close</button>
+      </div>
+    </div>
+
+    <!-- Smart Navigator Modal -->
+    <div id="mapModal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Stadium Navigator" style="display: none;">
+      <div class="modal-content text-center" style="max-width: 90vw; width: 500px; padding: 24px;">
+        <h3 id="mapTitle" class="text-large text-primary mb-1">Stadium Navigator</h3>
+        <p id="mapSubtitle" class="text-small text-secondary mb-3">Live path from your seat</p>
+        
+        <div class="card" style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 16px; overflow: hidden; position: relative;">
+          <svg id="stadiumSvg" width="100%" height="100%" viewBox="0 0 800 800" style="display: block;"></svg>
+        </div>
+
+        <button id="closeMapBtn" class="floating-demo-btn" style="position: relative; top: auto; right: auto; left: auto; bottom: auto; margin-top: 20px; background-color: var(--md-sys-color-surface-variant); color: var(--md-sys-color-on-surface); box-shadow: none; width: 100%; border-radius: 12px; display: block;" aria-label="Close Navigator">Close Navigator</button>
+      </div>
+    </div>
+
+    <!-- Footer / Bottom Nav -->
+    <div class="app-footer">
+      <nav class="bottom-nav" role="tablist">
+        <button id="tab-entry" class="nav-item active" role="tab" aria-selected="true" aria-controls="panel-entry" aria-label="Entry tab">
+          <span class="material-symbols-outlined">home</span>
+          <span class="nav-label">Entry</span>
+        </button>
+        <button id="tab-pulse" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-pulse" aria-label="Live Pulse tab">
+          <span class="material-symbols-outlined">analytics</span>
+          <span class="nav-label">Live Pulse</span>
+        </button>
+        <button id="tab-concierge" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-concierge" aria-label="Concierge tab">
+          <span class="material-symbols-outlined">support_agent</span>
+          <span class="nav-label">Concierge</span>
+        </button>
+        <button id="tab-exit" class="nav-item" role="tab" aria-selected="false" aria-controls="panel-exit" aria-label="Exit tab">
+          <span class="material-symbols-outlined">logout</span>
+          <span class="nav-label">Exit</span>
+        </button>
+      </nav>
+      <div class="footer-credits" style="font-size: 10px; text-align: center; color: var(--md-sys-color-on-surface-variant); padding: 4px 0; background: var(--md-sys-color-surface);">
+        <span id="firebaseAuthBadge" style="display: none; color: #34A853; margin-right: 8px;">🔒 Anonymous session active</span>
+        Built with Google Antigravity | PromptWars 2026
+      </div>
+    </div>
+
+    <!-- Facts Modal (Centered Glassmorphic Card) -->
+    <div id="factsModal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Stadium Facts" style="display:none; align-items: center; justify-content: center;">
+      <div class="facts-card">
+        <h3 class="text-large mb-16" style="color: white;">Did You Know? ✨</h3>
+        <ul id="factsList" class="facts-list"></ul>
+        <button id="closeFactsBtn" class="segment-btn active" style="width: 100%; margin-top: 16px;" aria-label="Dismiss facts">Got it!</button>
+      </div>
+    </div>
+
+  <!-- Scripts — All data fetched from Flask API -->
+  <script src="app.js"></script>
+</body>
+</html>
