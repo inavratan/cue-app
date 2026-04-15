@@ -221,3 +221,23 @@ def test_gzip_compression(client):
     # flask-compress should add Content-Encoding header for compressible responses
     # The test client may not trigger it, but the endpoint must work
     assert len(response.data) > 0
+
+def test_rate_limit_enforced(client):
+    """Asserts that the 21st request triggers a 429 Too Many Requests response."""
+    # Reset tracking if needed, or just spam an endpoint
+    count = 0
+    while count <= 25:
+        response = client.get('/api/venues')
+        if response.status_code == 429:
+            assert True
+            return
+        count += 1
+    assert False, "Rate limit was not enforced after 25 requests"
+
+def test_pwa_assets_served(client):
+    """Verifies the critical PWA assets are served successfully."""
+    response_sw = client.get('/sw.js')
+    assert response_sw.status_code == 200
+    
+    response_mf = client.get('/manifest.json')
+    assert response_mf.status_code == 200

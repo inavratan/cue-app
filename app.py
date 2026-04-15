@@ -50,6 +50,7 @@ class InvalidPhaseError(ValueError):
 # ─── App Setup ─────────────────────────────────────────────────────────
 app = Flask(__name__, static_folder="static", static_url_path="")
 app.config["JSON_SORT_KEYS"] = False
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 31536000
 app.config["MAX_CONTENT_LENGTH"] = 1 * 1024 * 1024  # 1MB max request size
 
 Compress(app)
@@ -64,13 +65,27 @@ limiter = Limiter(get_remote_address, app=app, default_limits=[Config.RATE_LIMIT
 @app.after_request
 def set_security_headers(response):
     """Attach security headers to every response."""
-    response.headers["Content-Security-Policy"] = "default-src 'self'; script-src * 'unsafe-inline' 'unsafe-eval'; style-src * 'unsafe-inline'; font-src * data:; img-src * data: blob:; connect-src *; frame-ancestors 'none';"
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com; "
+        "img-src 'self' data: https://res.cloudinary.com; "
+        "connect-src 'self' https://generativelanguage.googleapis.com https://translation.googleapis.com https://www.google-analytics.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com; "
+        "frame-ancestors 'none';"
+    )
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload"
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=(self)"
     response.headers["X-Permitted-Cross-Domain-Policies"] = "none"
+    
+    # Aggressive Static Cache Control Override
+    if request.path.startswith('/static/') or request.path in ['/sw.js', '/manifest.json', '/style.css', '/app.js', '/']:
+        response.headers["Cache-Control"] = "public, max-age=31536000"
+        
     return response
 
 # ─── Input Validation Helper ──────────────────────────────────────────

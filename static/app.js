@@ -1,3 +1,9 @@
+// Google Analytics Initialization
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-R5GHRCEJ9Z');
+
 /**
  * Cue — Your signal to move
  * AI-powered stadium companion for Indian sporting venues
