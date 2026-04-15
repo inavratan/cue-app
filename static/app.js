@@ -248,6 +248,12 @@ async function init() {
         });
         if (feedbackContainer) feedbackContainer.style.display = 'flex';
 
+        // Update ARIA state for accessibility
+        const feedbackTrigger = document.querySelector('[aria-expanded="false"]');
+        if (feedbackTrigger) {
+          feedbackTrigger.setAttribute('aria-expanded', 'true');
+        }
+
         // Save to backend
         apiCall('/api/save-feedback', 'POST', {
           venue_id: venueSelect.value,

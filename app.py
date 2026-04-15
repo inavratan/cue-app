@@ -316,6 +316,7 @@ def concierge():
             .get("parts", [{}])[0]
             .get("text", _get_fallback_response(message))
         )
+        reply = reply.replace("*", "").replace("#", "")
         return jsonify({"reply": reply, "source": "gemini"})
 
     except requests.exceptions.RequestException as e:
