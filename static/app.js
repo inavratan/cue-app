@@ -418,8 +418,7 @@ async function updateVenue(venueKey) {
 
   if (stadiumHeroImage && data.heroImage) {
   // Optimize Cloudinary image: resize to 800px, auto quality, auto format
-  const optimizedUrl = data.heroImage.replace('/upload/', '/upload/w_800,c_fill,q_auto,f_auto/');
-  stadiumHeroImage.src = optimizedUrl;
+  stadiumHeroImage.src = data.heroImage;
   stadiumHeroImage.alt = `${data.name} 3D View`;
 }
 
