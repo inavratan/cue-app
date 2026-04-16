@@ -64,11 +64,14 @@ body.a11y-mode .status-badge {
   background-color: var(--md-sys-color-surface-variant);
   min-height: 100vh;
   position: relative;
-  padding-bottom: 110px; /* Increased space for bottom nav + breathing room */
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 76px; /* Exactly enough space for bottom nav */
 }
 
 .content-padding {
   padding: 0 16px;
+  flex-grow: 1; /* Pushes footer credits to the bottom */
 }
 
 /* Typography styles */
