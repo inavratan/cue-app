@@ -9,12 +9,10 @@ Security: CSP headers on every response, rate limiting (20 req/min),
 input validation, API keys via environment variables.
 """
 
-import os
 import math
 import time
 import logging
 import re
-from functools import lru_cache
 
 import requests
 from flask import Flask, request, jsonify, send_from_directory, abort
@@ -119,6 +117,7 @@ def _extract_venue_phase(data: dict) -> tuple:
 
 @app.route("/")
 def serve_index():
+    """Serve the main single-page application."""
     return send_from_directory(app.static_folder, "index.html")
 
 @app.route("/api/health", methods=["GET"])
@@ -129,6 +128,7 @@ def health_check():
 @app.route("/api/venues", methods=["GET"])
 @limiter.limit(Config.RATE_LIMIT)
 def list_venues():
+    """Return a summary list of all available venues."""
     summary = []
     for vid, v in VENUES.items():
         summary.append({
@@ -146,13 +146,15 @@ def list_venues():
 @app.route("/api/venue/<venue_id>", methods=["GET"])
 @limiter.limit(Config.RATE_LIMIT)
 def get_venue(venue_id: str):
+    """Return full details for a single venue by ID."""
     if venue_id not in Config.SUPPORTED_VENUES:
-        abort(400, description=f"Invalid venue_id: '{venue_id}'.")
+        raise InvalidVenueError(venue_id)
     return jsonify(VENUES[venue_id])
 
 @app.route("/api/crowd-data", methods=["POST"])
 @limiter.limit(Config.RATE_LIMIT)
 def crowd_data():
+    """Return crowd density data for venue zones based on event phase."""
     data = request.get_json(silent=True) or {}
     venue_id, phase = _extract_venue_phase(data)
     multiplier = get_phase_multiplier(phase)
@@ -186,6 +188,7 @@ def crowd_data():
 @app.route("/api/wait-times", methods=["POST"])
 @limiter.limit(Config.RATE_LIMIT)
 def wait_times():
+    """Return gate wait times adjusted by current event phase."""
     data = request.get_json(silent=True) or {}
     venue_id, phase = _extract_venue_phase(data)
     multiplier = get_phase_multiplier(phase)
@@ -208,6 +211,7 @@ def wait_times():
 @app.route("/api/food-stalls", methods=["POST"])
 @limiter.limit(Config.RATE_LIMIT)
 def food_stalls():
+    """Return food stall data with phase-adjusted wait times."""
     data = request.get_json(silent=True) or {}
     venue_id, phase = _extract_venue_phase(data)
     preference = data.get("preference")
@@ -229,6 +233,7 @@ def food_stalls():
 @app.route("/api/transport", methods=["POST"])
 @limiter.limit(Config.RATE_LIMIT)
 def transport():
+    """Return transport options adjusted by event phase with exit forecast."""
     data = request.get_json(silent=True) or {}
     venue_id, phase = _extract_venue_phase(data)
     multiplier = get_phase_multiplier(phase)
@@ -260,10 +265,11 @@ def transport():
 @app.route("/api/alerts", methods=["POST"])
 @limiter.limit(Config.RATE_LIMIT)
 def alerts():
+    """Return venue emergency contacts and current announcements."""
     data = request.get_json(silent=True) or {}
     venue_id = data.get("venue_id", "")
     if venue_id not in Config.SUPPORTED_VENUES:
-        abort(400, description=f"Invalid venue_id: '{venue_id}'.")
+        raise InvalidVenueError(venue_id)
 
     venue = VENUES[venue_id]
     return jsonify({
@@ -277,6 +283,7 @@ def alerts():
 @app.route("/api/concierge", methods=["POST"])
 @limiter.limit(Config.RATE_LIMIT)
 def concierge():
+    """AI Concierge endpoint powered by Gemini for natural language assistance."""
     data = request.get_json(silent=True) or {}
     venue_id, phase = _extract_venue_phase(data)
     message = data.get("message", "").strip()
@@ -331,6 +338,7 @@ def concierge():
         return jsonify({"reply": _get_fallback_response(message), "source": "fallback"})
 
 def _get_fallback_response(message: str) -> str:
+    """Return a contextual fallback response when Gemini is unavailable."""
     fallbacks = {
         "food": "The Gujarati Farsan counter near Gate C is your best bet — just 2 minutes from Block B with a current wait of about 3 minutes.",
         "restroom": "Restroom A (North) is closest — about 2 minutes walk. Current queue is short, roughly 3-4 minutes.",
@@ -348,6 +356,7 @@ def _get_fallback_response(message: str) -> str:
 @app.route("/api/translate", methods=["POST"])
 @limiter.limit(Config.RATE_LIMIT)
 def translate():
+    """Translate text to Hindi using Google Cloud Translation API."""
     data = request.get_json(silent=True) or {}
     text = data.get("text", "").strip()
     target = data.get("target", "hi")
@@ -409,13 +418,14 @@ def translate_batch():
 @app.route("/api/save-feedback", methods=["POST"])
 @limiter.limit(Config.RATE_LIMIT)
 def save_feedback():
+    """Save anonymous user feedback with optional Firebase persistence."""
     data = request.get_json(silent=True) or {}
     venue_id = data.get("venue_id", "")
     rating = data.get("rating", 0)
     chips = data.get("chips", [])
 
     if venue_id not in Config.SUPPORTED_VENUES:
-        abort(400, description="Invalid venue_id.")
+        raise InvalidVenueError(venue_id)
     if not isinstance(rating, (int, float)) or not (1 <= rating <= 5):
         abort(400, description="Rating must be between 1 and 5.")
     if not isinstance(chips, list):
@@ -467,6 +477,7 @@ def save_feedback():
 @app.route("/api/firebase-config", methods=["GET"])
 @limiter.limit(Config.RATE_LIMIT)
 def firebase_config():
+    """Return Firebase web API key for client-side anonymous auth."""
     return jsonify({"apiKey": Config.FIREBASE_API_KEY})
 
 # ─── Error Handlers ────────────────────────────────────────────────────
@@ -484,14 +495,17 @@ def handle_invalid_phase(e):
 
 @app.errorhandler(400)
 def bad_request(e):
+    """Handle 400 Bad Request errors with JSON response."""
     return jsonify({"error": str(e.description)}), 400
 
 @app.errorhandler(404)
 def not_found(e):
+    """Handle 404 Not Found errors with JSON response."""
     return jsonify({"error": "Resource not found."}), 404
 
 @app.errorhandler(429)
 def too_many_requests(e):
+    """Handle 429 Rate Limit errors with JSON response."""
     return jsonify({"error": "Rate limit exceeded."}), 429
 
 # ─── Entry Point ───────────────────────────────────────────────────────
