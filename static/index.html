@@ -66,15 +66,15 @@
     <div class="card match-context">
       <div class="match-header">
         <div>
-          <div id="matchName" class="text-bold text-primary mb-8" style="font-size: 18px;">MI vs CSK</div>
-          <div id="matchDetails" class="text-secondary text-medium" style="font-size: 13px;">IPL T20 · 7:30 PM</div>
+          <div id="matchName" class="text-bold text-primary mb-8 fs-18">MI vs CSK</div>
+          <div id="matchDetails" class="text-secondary text-medium fs-13">IPL T20 · 7:30 PM</div>
         </div>
         <div class="d-flex align-center gap-2">
           <button id="calendarBtn" class="icon-btn-subtle" title="Save to Calendar" aria-label="Save match to Google Calendar" style="border: 1px solid var(--md-sys-color-primary); color: var(--md-sys-color-primary); font-size: 12px; width: auto; padding: 0 10px; border-radius: 100px; height: 32px; font-weight: 600; gap: 4px;">
             📅 Calendar
           </button>
           <button id="loreBtn" class="icon-btn-subtle" title="Stadium Facts" aria-label="Show stadium facts">
-            <span class="material-symbols-outlined" style="font-size: 18px;">lightbulb</span>
+            <span class="material-symbols-outlined fs-18">lightbulb</span>
           </button>
           <button id="headerMapBtn" class="qr-nav-btn" style="background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container);" aria-label="Show stadium map">
             <span class="material-symbols-outlined">map</span>
@@ -93,10 +93,10 @@
         <!-- Ticket Card -->
         <div class="card ticket-card">
           <div>
-            <div id="seatLabel" class="text-secondary text-medium mb-8" style="font-size: 12px;" data-i18n="Your Seats">Your Seats</div>
-            <div id="seatInfo" class="text-bold text-primary" style="font-size: 16px;"></div>
+            <div id="seatLabel" class="text-secondary text-medium mb-8 fs-12" data-i18n="Your Seats">Your Seats</div>
+            <div id="seatInfo" class="text-bold text-primary fs-16"></div>
           </div>
-          <div id="qrTriggerBtn" class="qr-code" style="cursor: pointer;" aria-label="Show scannable QR ticket" role="button">
+          <div id="qrTriggerBtn" class="qr-code cursor-pointer" aria-label="Show scannable QR ticket" role="button">
             <div class="qr-placeholder" aria-hidden="true">
               <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
               <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
@@ -105,7 +105,7 @@
               <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
               <div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div><div class="qr-dot"></div>
             </div>
-            <div class="text-secondary text-medium" style="font-size: 10px;" data-i18n="Scan at gate">Scan at gate</div>
+            <div class="text-secondary text-medium fs-10" data-i18n="Scan at gate">Scan at gate</div>
           </div>
         </div>
 
@@ -116,7 +116,7 @@
         </div>
 
         <!-- Timeline Strip -->
-        <h2 class="section-title text-primary" style="margin-top: 32px;" data-i18n="Event Timeline">Event Timeline</h2>
+        <h2 class="section-title text-primary mt-32" data-i18n="Event Timeline">Event Timeline</h2>
         <div id="timelineContainer" class="timeline-container" aria-live="polite">
           <!-- Timeline items will be injected here by app.js -->
         </div>
@@ -127,7 +127,7 @@
       <div id="panel-pulse" class="tab-panel" role="tabpanel" aria-labelledby="tab-pulse">
         
         <div class="d-flex justify-between align-center mb-8">
-          <div class="text-secondary text-medium" style="font-size: 14px;" data-i18n="Match Status">Match Status</div>
+          <div class="text-secondary text-medium fs-14" data-i18n="Match Status">Match Status</div>
           <div class="live-indicator">
             <div class="pulse-dot"></div> Live
           </div>
@@ -139,7 +139,7 @@
           <div id="pulsePhaseIndicator" class="phase-pill match" role="status">
             Match On 🏏
           </div>
-          <div id="pulsePhaseDesc" class="text-secondary" style="font-size: 13px;">
+          <div id="pulsePhaseDesc" class="text-secondary fs-13">
             Match in progress. Most fans are seated.
           </div>
         </div>
@@ -178,11 +178,11 @@
           <div class="card smart-card ai-card">
             <div class="smart-card-title">
               <span class="d-flex align-center gap-2">
-                AI Insight <span class="text-secondary ml-4" style="font-size: 11px; font-weight: 500;">Powered by Gemini</span>
+                AI Insight <span class="text-secondary ml-4 fs-11 fw-500">Powered by Gemini</span>
               </span>
               <span>✨</span>
             </div>
-            <div id="pulseAIPrediction" class="text-primary text-regular" style="font-size: 14px; line-height: 1.5;" aria-live="polite">
+            <div id="pulseAIPrediction" class="text-primary text-regular fs-14 lh-15" aria-live="polite">
               <!-- Prediction injected here -->
             </div>
           </div>
@@ -207,7 +207,7 @@
         <div class="chat-container">
           <!-- Chat Header -->
           <div class="chat-header">
-            <div class="text-medium text-primary" style="font-size: 16px;">✨ Cue Concierge</div>
+            <div class="text-medium text-primary fs-16">✨ Cue Concierge</div>
             <div class="gemini-badge">Powered by Gemini</div>
           </div>
 
@@ -247,16 +247,16 @@
           <div id="exitHeroCard" class="card ai-exit-card" aria-live="polite">
             <div class="ai-label">✨ AI Recommendation</div>
             <h3 id="exitHeadline" class="text-large text-primary mb-1 mt-1"></h3>
-            <p id="exitDetail" class="text-medium text-secondary mb-2" style="line-height: 1.5;"></p>
+            <p id="exitDetail" class="text-medium text-secondary mb-2 lh-15"></p>
             <div id="exitWaitSaved" class="exit-saved-badge" style="display: none;"></div>
           </div>
 
           <!-- Transport Section -->
           <h2 class="section-title mt-3 mb-2" style="font-size: 16px; font-family: 'DM Sans', sans-serif;" data-i18n="Getting Home">Getting Home</h2>
           
-          <div class="destination-form mb-3" style="position: relative;">
+          <div class="destination-form mb-3 position-relative">
             <div class="input-container" style="background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: 12px; display: flex; align-items: center; padding: 0 12px;">
-              <span class="material-symbols-outlined text-secondary" style="font-size: 20px;">search</span>
+              <span class="material-symbols-outlined text-secondary fs-20">search</span>
               <span id="routeInputDesc" class="sr-only">Search for your destination to get transport recommendations</span>
               <input type="text" id="routeDestinationInput" aria-describedby="routeInputDesc" placeholder="Where do you want to go?" aria-label="Search destination" style="border: none; padding: 16px 12px; width: 100%; border-radius: 12px; font-size: 15px; outline: none; background: transparent; color: var(--md-sys-color-on-surface);">
             </div>
@@ -267,10 +267,10 @@
             <!-- Transport cards injected here -->
           </div>
 
-          <h2 class="section-title mt-3 mb-2" style="font-size: 16px;">Your Match Memory</h2>
+          <h2 class="section-title mt-3 mb-2 fs-16">Your Match Memory</h2>
           <div class="card text-center p-3 mb-3" style="background: linear-gradient(135deg, #1A73E8 0%, #0D47A1 100%); color: white; border: none;">
-            <div style="font-size: 24px; margin-bottom: 8px;">🏆</div>
-            <h3 class="text-large mb-1" style="color: white;">Download Your Souvenir</h3>
+            <div class="fs-24 mb-8">🏆</div>
+            <h3 class="text-large mb-1 text-white">Download Your Souvenir</h3>
             <p class="text-small mb-3" style="color: rgba(255,255,255,0.8);">Get a custom digital poster of your night at the stadium.</p>
             <button id="generatePosterBtn" class="premium-btn" aria-label="Generate and download match souvenir">Generate & Download</button>
           </div>
@@ -313,7 +313,7 @@
     <div id="qrModal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="QR Ticket Scanner" style="display: none;">
       <div class="modal-content text-center">
         <h3 class="text-large text-primary mb-1">Scan Ticket</h3>
-        <div id="qrPagination" class="text-medium text-secondary mb-3" style="font-size: 14px;"></div>
+        <div id="qrPagination" class="text-medium text-secondary mb-3 fs-14"></div>
         
         <div class="d-flex align-center justify-center" style="gap: 16px;">
           <button id="prevTicketBtn" class="qr-nav-btn" aria-label="Previous Ticket">
@@ -329,7 +329,7 @@
           </button>
         </div>
 
-        <div id="qrModalSeatInfo" class="text-secondary text-medium mt-3" style="font-size: 14px;"></div>
+        <div id="qrModalSeatInfo" class="text-secondary text-medium mt-3 fs-14"></div>
         <button id="closeQrBtn" class="floating-demo-btn" style="position: relative; top: auto; right: auto; left: auto; bottom: auto; margin-top: 16px; background-color: var(--md-sys-color-surface-variant); color: var(--md-sys-color-on-surface); box-shadow: none; width: 100%; border-radius: 12px; display: block;" aria-label="Close QR Modal">Close</button>
       </div>
     </div>
@@ -343,7 +343,7 @@
         </div>
         <div class="text-center mt-3 mb-2">
           <a href="tel:+911234567890" style="color: #1a73e8; font-weight: 500; text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 4px;">
-            <span class="material-symbols-outlined" style="font-size: 16px;">call</span> Call venue helpline
+            <span class="material-symbols-outlined fs-16">call</span> Call venue helpline
           </a>
         </div>
         <button id="closeSosBtn" class="floating-demo-btn full-width" style="position: relative; top: auto; right: auto; left: auto; bottom: auto; margin-top: 16px; background-color: var(--md-sys-color-surface-variant); color: var(--md-sys-color-on-surface); box-shadow: none; width: 100%; border-radius: 12px;" aria-label="Close SOS Modal">Close</button>
@@ -357,7 +357,7 @@
         <p id="mapSubtitle" class="text-small text-secondary mb-3">Live path from your seat</p>
         
         <div class="card" style="background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 16px; overflow: hidden; position: relative;">
-          <svg id="stadiumSvg" width="100%" height="100%" viewBox="0 0 800 800" style="display: block;"></svg>
+          <svg id="stadiumSvg" width="100%" height="100%" viewBox="0 0 800 800" class="d-block"></svg>
         </div>
 
         <button id="closeMapBtn" class="floating-demo-btn" style="position: relative; top: auto; right: auto; left: auto; bottom: auto; margin-top: 20px; background-color: var(--md-sys-color-surface-variant); color: var(--md-sys-color-on-surface); box-shadow: none; width: 100%; border-radius: 12px; display: block;" aria-label="Close Navigator">Close Navigator</button>
@@ -393,7 +393,7 @@
     <!-- Facts Modal (Centered Glassmorphic Card) -->
     <div id="factsModal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Stadium Facts" style="display:none; align-items: center; justify-content: center;">
       <div class="facts-card">
-        <h3 class="text-large mb-16" style="color: white;">Did You Know? ✨</h3>
+        <h3 class="text-large mb-16 text-white">Did You Know? ✨</h3>
         <ul id="factsList" class="facts-list"></ul>
         <button id="closeFactsBtn" class="segment-btn active" style="width: 100%; margin-top: 16px;" aria-label="Dismiss facts">Got it!</button>
       </div>

@@ -1627,3 +1627,25 @@ body.a11y-mode .status-badge {
     border: 1px solid currentColor;
   }
 }
+
+/* Auto-extracted Utilities */
+.fs-10 { font-size: 10px !important; }
+.fs-11 { font-size: 11px !important; }
+.fs-12 { font-size: 12px !important; }
+.fs-13 { font-size: 13px !important; }
+.fs-14 { font-size: 14px !important; }
+.fs-16 { font-size: 16px !important; }
+.fs-18 { font-size: 18px !important; }
+.fs-20 { font-size: 20px !important; }
+.fs-24 { font-size: 24px !important; }
+.mt-32 { margin-top: 32px !important; }
+.mt-16 { margin-top: 16px !important; }
+.mb-8 { margin-bottom: 8px !important; }
+.lh-15 { line-height: 1.5 !important; }
+.fw-500 { font-weight: 500 !important; }
+.cursor-pointer { cursor: pointer !important; }
+.font-dm-sans { font-family: 'DM Sans', sans-serif !important; }
+.text-white { color: white !important; }
+.border-none { border: none !important; }
+.d-block { display: block !important; }
+.position-relative { position: relative !important; }
